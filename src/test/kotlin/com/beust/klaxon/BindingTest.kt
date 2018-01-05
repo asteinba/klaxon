@@ -141,13 +141,14 @@ class BindingTest {
           "cards": [
             {"value" : 5, "suit" : "Hearts"},
             {"value" : 8, "suit" : "Spades"},
+            {"value" : 10},
           ]
         }
     """)
 
         if (result != null) {
             Assert.assertEquals(result.cardCount, 2)
-            Assert.assertEquals(result.cards, listOf(Card(5, "Hearts"), Card(8, "Spades")))
+            Assert.assertEquals(result.cards, listOf(Card(5, "Hearts"), Card(8, "Spades"), Card(10, null)))
         } else {
             Assert.fail("Should have received a non null deck")
         }
@@ -179,13 +180,13 @@ class BindingTest {
             var name: String? = null
     )
 
-    @Test(expectedExceptions = arrayOf(KlaxonException::class))
     fun badFieldMapping() {
-        Klaxon().parse<Mapping>("""
+        val result = Klaxon().parse<Mapping>("""
         {
           "name": "foo"
         }
         """)
+        Assert.assertEquals(result?.name, null)
     }
 
     fun goodFieldMapping() {

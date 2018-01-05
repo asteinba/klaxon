@@ -247,9 +247,11 @@ class Klaxon : ConverterFinder {
                         val jValue = jsonObject[fieldName]
 
                         if (jValue == null) {
-                            val jsonFields = jsonObject.keys.joinToString(",")
-                            throw KlaxonException("Don't know how to map class field \"$fieldName\" " +
-                                    "to any JSON field: $jsonFields")
+                            if (!prop.returnType.isMarkedNullable) {
+                                val jsonFields = jsonObject.keys.joinToString(",")
+                                throw KlaxonException("Don't know how to map class field \"$fieldName\" " +
+                                        "to any JSON field: $jsonFields")
+                            }
                         } else {
                             val convertedValue = findConverterFromClass(cls, prop)
                                     .fromJson(JsonValue(jValue, prop, this@Klaxon))
